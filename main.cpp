@@ -1,78 +1,104 @@
 //
 //  main.cpp
-//  vectot
+//  Account
 //
-//  Created by 盐城孟 on 7/16/19.
+//  Created by 盐城孟 on 8/4/19.
 //  Copyright © 2019 盐城孟. All rights reserved.
 //
 
-#include "vectorstack.h";
+#include <iostream>
+#include <cmath>
+#include <cctype>
+#include <iomanip>
+#include <string>
+#include "Account.h"
+using namespace std;
+void displayMenu();
+void makeDeposit(Account &);
+void withdraw(Account &);
+
+
 int main() {
-    VectorStack<int> mystack;
-    int i;
+    // insert code here...
+    Account saving;
+    int y, m, d;
+    string des;
+    char choice;
+    cout << fixed << showpoint << setprecision(2);
     do
     {
-        cout<<"1:push.\t"<<"2.pop\t"<<"3.retrieve top element.\t"<<"4.check if empty.\t"<<"5.display.\t"<<"6.show size\t"<<"7.quit."<<endl;
-        cout<<"Please enter 1-7 to test this stack:"<<endl;
-        cin>>i;
-        switch (i) {
-            case 1:
-                cout<<"Please enter a element you want to push into stack"<<endl;
-                int one;
-                cin>> one;
-                mystack.push(one);
-                cout<<"Now the stack is: ";
-                mystack.display();
+        displayMenu();
+        cin >> choice;
+        if (toupper(choice) == 'B' || toupper(choice) == 'C')
+        {
+            cout << "Please enter today's date: ";
+            cin >> y >> m >> d;
+            cout << "Please describe the source/goto of the money: ";
+            cin >> des;
+            saving.setYear(y);
+            saving.setMonth(m);
+            saving.setDay(d);
+            saving.setDescription(des);
+        }
+        while (toupper(choice) < 'A' || toupper(choice) > 'D')
+        {
+            cout << "Please make a choice in the range of A through D!";
+            cin >> choice;
+        }
+    switch(choice)
+        {
+            case 'a':
+            case 'A':
+                cout << saving.getYear() << "-" << saving.getMonth() << "-" << saving.getDay() <<"  ";
+                cout << "The current balance is ";
+                cout << saving.getBalance() << endl;
                 break;
-            case 2:
-                if(!mystack.empty())
-                {cout<<"Now the top element in this stack will be popped,";
-                    mystack.pop();
-                    cout<<" and the stack is: ";
-                    if(mystack.empty())
-                    {cout<<"empty.";}
-                    else{
-                        mystack.display();}
-                }else
-                {cout<<"Sorry, this stack is empty now"<<endl;}
+            case 'b':
+            case 'B':
+                cout << saving.getYear() << "-" << saving.getMonth() << "-" << saving.getDay() << "  ";
+                makeDeposit (saving);
+                cout << "The source of the money: " << saving.getDescription();
                 break;
-            case 3:
-                if(!mystack.empty())
-                {
-                    cout<<"The top element is:";
-                    cout<<mystack.top();
-                    cout<<endl;
-                }else
-                {cout<<"Sorry, this stack is empty now"<<endl;}
+            case 'c':
+            case 'C':
+                withdraw(saving);
+                cout << "The goto of the money: " << saving.getDescription();
                 break;
-            case 4:
-                if(mystack.empty())
-                {cout<<"This stack is empty."<<endl;}
-                else{
-                    cout<<"This stack is not empty, and this elments are: ";
-                    mystack.display();
-                }
-                break;
-            case 5:
-                if(!mystack.empty())
-                {cout<<"This stack is: ";
-                    mystack.display();
-                }else {
-                    cout<<"Sorry, this stack is now empty"<<endl;
-                }
-                break;
-            case 6:
-                if(!mystack.empty()){
-                    cout<<"This stack's size now is: ";
-                    cout<<mystack.size();
-                    cout<<endl;
-                    break;}
-                else
-                {cout<<"Sorry, this stack is now empty."<<endl;}
-            }
-        }while(i !=7);
-        return 0;
-        
-    }
+                
+        }
+    }while(toupper(choice) != 'D');
 
+    return 0;
+}
 
+void displayMenu()
+{
+    cout << "\n             MENU\n";
+    cout << "----------------------------------\n";
+    cout << "A) Display the account balance\n";
+    cout << "B) Make a deposit\n";
+    cout << "C) Mkae a withdraw\n";
+    cout << "D) Exit the program\n";
+    cout << "Enter yout choice: ";
+}
+
+void makeDeposit(Account &acc)
+{
+   
+    double dollars;
+    cout << "Enter the amount of the deposit: ";
+    cin >> dollars;
+    cin.ignore();
+    acc.makeDeposit(dollars);
+}
+
+void withdraw(Account &acc)
+{
+    double dollars;
+    cout << "Enter the amount of the withdrawal: ";
+    cin >> dollars;
+    if (!acc.withdraw(dollars))
+        cout << "ERROR: Withdrawal amount too large.\n\n";
+    cin.ignore();
+    
+}
